@@ -5,6 +5,9 @@ const CountryInfo: React.FC = () => {
     const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
     const [countryInfo, setCountryInfo] = useState<CountryInfo | null>(null);
 
+    const POST_URL = 'https://restcountries.com/v2/alpha/';
+    const COUNTRY_URL = 'https://restcountries.com/v2/all?fields=alpha3Code,name';
+
     const fetchCountries = useCallback(async () => {
         try {
             const response = await fetch(COUNTRY_URL);
@@ -49,9 +52,25 @@ const CountryInfo: React.FC = () => {
     }, [fetchCountryInfo]);
 
     return (
-        <div>
+        <>
+            <h2>Select a country</h2>
+            <select onChange={CountryChange} value={selectedCountry || ''}>
+                <option value="">Select a country</option>
+                {countries.map(country => (
+                    <option key={country.alpha3Code} value={country.alpha3Code}>{country.name}</option>
+                ))}
+            </select>
 
-        </div>
+            <div id="countryInfo">
+                {selectedCountry ? (
+                    <div>
+                        <h3>{countryInfo?.name}</h3>
+                        <p>This Country has borders with: {countryInfo?.borders?.join(', ')}</p>
+                    </div>) : (
+                    <p>Select a country for showing info</p>
+                )}
+            </div>
+        </>
     );
 };
 
