@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 const CountryInfo: React.FC = () => {
     const [countries, setCountries] = useState<Country[]>([]);
@@ -32,6 +32,21 @@ const CountryInfo: React.FC = () => {
             console.error(error);
         }
     }, []);
+
+    useEffect(() => {
+        fetchCountries();
+    }, [fetchCountries]);
+
+    const CountryChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+        const countryCode = event.target.value;
+        setSelectedCountry(countryCode);
+
+        if (countryCode) {
+            fetchCountryInfo(countryCode);
+        } else {
+            setCountryInfo(null);
+        }
+    }, [fetchCountryInfo]);
 
     return (
         <div>
